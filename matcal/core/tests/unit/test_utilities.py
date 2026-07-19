@@ -54,7 +54,7 @@ class TestUtilities(MatcalUnitTest):
 
         nontext_fname = "text.bin"
         with open(nontext_fname, "wb") as f:
-            os.urandom(1024)
+            f.write(os.urandom(1024))
         self.assertFalse(is_text_file(nontext_fname))
 
         folder_name = "subfolder"

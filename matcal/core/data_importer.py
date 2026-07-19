@@ -416,7 +416,13 @@ def _has_invalid_lines(lines: str)->bool:
 
 def _unix_detect_dos(filename: str) -> bool:
     unix_report = _get_unix_file_report(filename)
-    return "CRLF" in unix_report.split()
+    if "CRLF" in unix_report.split():
+        return True
+    # 'file' output wording (e.g. CSV-specific detection) varies across
+    # libmagic versions and can omit "CRLF" even for a DOS-newline file.
+    # Fall back to a direct byte check so detection doesn't silently regress.
+    with open(filename, 'rb') as f:
+        return b"\r\n" in f.read()
 
 
 def _get_unix_file_report(filename):
